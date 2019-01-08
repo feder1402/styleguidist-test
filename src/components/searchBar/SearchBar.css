@@ -1,0 +1,25 @@
+#message {
+    font-size: 50%;
+    color: red;
+}
+
+button {
+    color: blue;
+    background-color: lightgreen; 
+}
+
+button:disabled {
+    color: black;
+    background-color: lightsalmon; 
+}
+
+input {
+    background-color: lightgoldenrodyellow; 
+    border: 3px;
+    border-color: black
+}
+
+input.error { 
+    background-color: rgba(255, 208, 208, 0.973); 
+    border-color: red
+}
