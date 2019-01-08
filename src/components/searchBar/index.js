@@ -49,7 +49,7 @@ const SearchBar = ({ onSubmit = () => null }) => {
 }
 
 
-SearchBar.views = (state) => (props) => {
+SearchBar.views = (state) => {
     let inputClassname = 'normal'
     let inputDisabled = false
     let buttonDisabled = false
@@ -137,4 +137,5 @@ SearchBar.propTypes = {
      */
     onSubmit: PropTypes.func.isRequired
 }
+
 export default SearchBar.views('ENABLED.VALID')
