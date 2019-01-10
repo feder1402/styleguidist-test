@@ -1,84 +1,32 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import useFocus from '../../utils/useFocus'
+import useDevTools from '../../utils/useDevTools'
 import './SearchBar.css'
 
 // const _isInvalid = s => !(/^[a-z]*$/i.test(s))
 
-const SearchBar = ({ onSubmit = () => null }) => {
-    // const error = null
-    // const isLoading = false
+//devTools.init({ value: 'initial state' });
+const config = { name: 'SearchBar', trace: true }
 
-    const [query, setQuery] = useState('')
-
-    // Set focus on input box (UC 1.1)
-    const searchRef = useFocus('')
-
-    // Return query string when user clicks button (UC 3.1)
-    const _onSubmit = (e) => {
-        e.preventDefault()
-        onSubmit(query)
-
-        // Clear input box after a search fires (UC 3.2)
-        setQuery('')
-    }
-
-    // const message = _isInvalid(query) ? 'Queries can have just letters' : ''
-
-    return (
-        <form onSubmit={_onSubmit} >
-            <input
-                className='normal' // {_isInvalid(query) ? "error" : 'normal'}
-                disabled={true} //{isLoading || error}
-                onChange={e => setQuery(e.target.value)}
-                placeholder='Enter tag to search...'
-                ref={searchRef}
-                type='text'
-                value={query}
-            />
-            {' '}
-            <button
-                disabled={true} // {isLoading || error || query === '' || _isInvalid(query)}
-                type='submit'
-            >
-                Search
-            </button>
-            {/* <div id="message">{message}</div> */}
-        </form >
-    )
-}
-
-
-SearchBar.views = (state) => {
-    let inputClassname = 'normal'
-    let inputDisabled = false
-    let buttonDisabled = false
-    let errMsg = ''
+const SearchBarViews = (state) => {
+    let inputEnabled = true
+    let submitEnabled = true
+    let error = undefined
 
     switch (state) {
         case 'DISABLED':
-            inputClassname = 'normal'
-            inputDisabled = false
-            buttonDisabled = false
-            errMsg = ''
+            inputEnabled = false
+            submitEnabled = false
             break;
         case 'ENABLED.EMPTY':
-            inputClassname = 'normal'
-            inputDisabled = false
-            buttonDisabled = true
-            errMsg = ''
+            submitEnabled = false
             break;
         case 'ENABLED.VALID':
-            inputClassname = 'normal'
-            inputDisabled = false
-            buttonDisabled = false
-            errMsg = ''
             break;
         case 'ENABLED.INVALID':
-            inputClassname = 'error'
-            inputDisabled = false
-            buttonDisabled = true
-            errMsg = 'Invalid value'
+            submitEnabled = false
+            error = 'Invalid value'
             break;
         default:
             console.log('Invalid state for SearchBar: ' + state)
@@ -89,10 +37,13 @@ SearchBar.views = (state) => {
         // const error = null
         // const isLoading = false
 
+        const devTools = useDevTools(config)
         const [query, setQuery] = useState('')
 
         // Set focus on input box (UC 1.1)
         const searchRef = useFocus('')
+
+        devTools.send('STATE_CHANGED', { state, inputEnabled, submitEnabled, error })
 
         // Return query string when user clicks button (UC 3.1)
         const _onSubmit = (e) => {
@@ -108,8 +59,8 @@ SearchBar.views = (state) => {
         return (
             <form onSubmit={_onSubmit} >
                 <input
-                    className={inputClassname} // {_isInvalid(query) ? "error" : 'normal'}
-                    disabled={inputDisabled} //{isLoading || error}
+                    className={error ? 'error' : 'normal'} // {_isInvalid(query) ? "error" : 'normal'}
+                    disabled={!inputEnabled} //{isLoading || error}
                     onChange={e => setQuery(e.target.value)}
                     placeholder='Enter tag to search...'
                     ref={searchRef}
@@ -118,24 +69,26 @@ SearchBar.views = (state) => {
                 />
                 {' '}
                 <button
-                    disabled={buttonDisabled} // {isLoading || error || query === '' || _isInvalid(query)}
+                    disabled={!submitEnabled} // {isLoading || error || query === '' || _isInvalid(query)}
                     type='submit'
                 >
                     Search
                 </button>
-                {errMsg && <div id="message">{errMsg}</div>}
+                {error && <div id="message">{error}</div>}
             </form >
         )
+    }
+
+    SearchBar.propTypes = {
+        /**
+         * Callback function to return the query parameter provided by the user
+         */
+        onSubmit: PropTypes.func.isRequired
     }
 
     return SearchBar
 }
 
-SearchBar.propTypes = {
-    /**
-     * Callback function to return the query parameter provided by the user
-     */
-    onSubmit: PropTypes.func.isRequired
-}
 
-export default SearchBar.views('ENABLED.VALID')
+
+export default SearchBarViews('ENABLED.VALID')
