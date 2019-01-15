@@ -6,7 +6,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <SearchBar />
+        <SearchBar onSubmit={(q) => {console.log('Submitted: ' + q)}}/>
       </div>
     );
   }
