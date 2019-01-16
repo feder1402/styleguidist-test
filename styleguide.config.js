@@ -1,3 +1,4 @@
 module.exports = {
-    webpackConfig: require('react-scripts/config/webpack.config.js')
-  }
+  components: 'src/components/**/index.js',
+  webpackConfig: require( 'react-scripts/config/webpack.config.js' ),
+}

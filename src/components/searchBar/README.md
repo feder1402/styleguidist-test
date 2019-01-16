@@ -1,5 +1,5 @@
 Simple SearchBar example:
 
 ```js
-<SearchBar onSubmit={() => {console.log('Hello')}} />
+<SearchBar onSubmit={(q) => {window.alert('Query: ' + q)}} />
 ```

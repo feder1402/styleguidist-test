@@ -1,4 +1,4 @@
-export default (state) => {
+export const getViewProps = (state) => {
     let inputEnabled = true
     let submitEnabled = true
     let error = undefined
